@@ -1,5 +1,6 @@
 const API_BASE_URL = "http://localhost:5000/api";
 
+// Upload Audio
 export async function uploadAudio(audioBlob) {
   try {
     const formData = new FormData();
@@ -21,10 +22,12 @@ export async function uploadAudio(audioBlob) {
     throw error;
   }
 }
+
+// Save Consultation
 export async function saveConsultation(data) {
   try {
     const response = await fetch(
-      "http://localhost:5000/api/consultations/save",
+      `${API_BASE_URL}/consultations/save`,
       {
         method: "POST",
         headers: {
@@ -40,14 +43,32 @@ export async function saveConsultation(data) {
     throw error;
   }
 }
+
+// Get All Consultations
 export async function getConsultations() {
   try {
     const response = await fetch(
-      "http://localhost:5000/api/consultations"
+      `${API_BASE_URL}/consultations`
     );
 
     return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
+// Delete Consultation
+export async function deleteConsultation(id) {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/consultations/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    return await response.json();
   } catch (error) {
     console.error(error);
     throw error;
