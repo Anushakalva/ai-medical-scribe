@@ -1,76 +1,108 @@
 const API_BASE_URL = "http://localhost:5000/api";
 
+// Get JWT Authorization Header
+function getAuthHeaders() {
+  const token = localStorage.getItem("token");
+
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+}
+
 // Upload Audio
 export async function uploadAudio(audioBlob) {
-  try {
-    const formData = new FormData();
+  const formData = new FormData();
 
-    formData.append("audio", audioBlob, "consultation.wav");
+  formData.append("audio", audioBlob, "consultation.wav");
 
-    const response = await fetch(`${API_BASE_URL}/upload-audio`, {
+  const response = await fetch(
+    `${API_BASE_URL}/upload-audio`,
+    {
       method: "POST",
       body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error("Upload failed");
     }
+  );
 
-    return await response.json();
-  } catch (error) {
-    console.error("Upload Error:", error);
-    throw error;
-  }
+  return await response.json();
 }
 
 // Save Consultation
 export async function saveConsultation(data) {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/consultations/save`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+  const response = await fetch(
+    `${API_BASE_URL}/consultations/save`,
+    {
+      method: "POST",
 
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders(),
+      },
+
+      body: JSON.stringify(data),
+    }
+  );
+
+  return await response.json();
 }
 
-// Get All Consultations
+// Get Consultations
 export async function getConsultations() {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/consultations`
-    );
+  const response = await fetch(
+    `${API_BASE_URL}/consultations`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
 
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return await response.json();
 }
 
 // Delete Consultation
 export async function deleteConsultation(id) {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/consultations/${id}`,
-      {
-        method: "DELETE",
-      }
-    );
+  const response = await fetch(
+    `${API_BASE_URL}/consultations/${id}`,
+    {
+      method: "DELETE",
 
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+      headers: getAuthHeaders(),
+    }
+  );
+
+  return await response.json();
+}
+
+// Register User
+export async function registerUser(userData) {
+  const response = await fetch(
+    `${API_BASE_URL}/auth/register`,
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(userData),
+    }
+  );
+
+  return await response.json();
+}
+
+// Login User
+export async function loginUser(credentials) {
+  const response = await fetch(
+    `${API_BASE_URL}/auth/login`,
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(credentials),
+    }
+  );
+
+  return await response.json();
 }

@@ -6,15 +6,16 @@ import {
   deleteConsultation,
 } from "../controllers/consultationController.js";
 
+import { protect } from "../middleware/authMiddleware.js";
+
 const router = express.Router();
 
-// Save Consultation
-router.post("/save", saveConsultation);
+// All consultation routes require authentication
 
-// Get All Consultations
-router.get("/", getAllConsultations);
+router.post("/save", protect, saveConsultation);
 
-// Delete Consultation
-router.delete("/:id", deleteConsultation);
+router.get("/", protect, getAllConsultations);
+
+router.delete("/:id", protect, deleteConsultation);
 
 export default router;

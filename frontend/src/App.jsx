@@ -1,40 +1,58 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard";
 import History from "./pages/History";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <Routes>
 
-      {/* Navigation */}
-      <nav className="bg-indigo-700 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto flex items-center gap-6 px-6 py-4">
+      {/* Public Routes */}
 
-          <Link
-            to="/"
-            className="font-semibold hover:text-indigo-200"
-          >
-            🩺 Dashboard
-          </Link>
+      <Route
+        path="/login"
+        element={<Login />}
+      />
 
-          <Link
-            to="/history"
-            className="font-semibold hover:text-indigo-200"
-          >
-            📋 Consultation History
-          </Link>
+      <Route
+        path="/register"
+        element={<Register />}
+      />
 
-        </div>
-      </nav>
+      {/* Protected Dashboard */}
 
-      {/* Pages */}
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/history" element={<History />} />
-      </Routes>
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
 
-    </div>
+      {/* Protected History */}
+
+      <Route
+        path="/history"
+        element={
+          <ProtectedRoute>
+            <History />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Redirect */}
+
+      <Route
+        path="*"
+        element={<Navigate to="/" />}
+      />
+
+    </Routes>
   );
 }
 

@@ -2,6 +2,13 @@ import mongoose from "mongoose";
 
 const consultationSchema = new mongoose.Schema(
   {
+    // User who created this consultation
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
     patient: {
       name: String,
       age: Number,
